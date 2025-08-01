@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><title>Join Page</title></head>
+<body>
+  <h2>Click Join</h2>
+  <button id="joinBtn">Join</button>
+  <script>
+    document.getElementById('joinBtn').addEventListener('click', async () => {
+      let deviceId = localStorage.getItem('deviceId');
+      if (!deviceId) {
+        deviceId = crypto.randomUUID();
+        localStorage.setItem('deviceId', deviceId);
+      }
+      const userAgent = navigator.userAgent;
+      await fetch('/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deviceId, userAgent })
+      });
+      alert('You have joined!');
+    });
+  </script>
+</body>
+</html>
