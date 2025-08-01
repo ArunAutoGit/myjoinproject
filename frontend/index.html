@@ -1,24 +1,73 @@
 <!DOCTYPE html>
-<html>
-<head><title>Join Page</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h2 {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    a {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 18px;
+      text-decoration: none;
+      color: #007bff;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
 <body>
+  <a href="dashboard.html">Go to Dashboard</a>
   <h2>Click Join</h2>
   <button id="joinBtn">Join</button>
+
   <script>
-    document.getElementById('joinBtn').addEventListener('click', async () => {
-      let deviceId = localStorage.getItem('deviceId');
-      if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        localStorage.setItem('deviceId', deviceId);
+    async function joinUser() {
+      try {
+        let deviceId = localStorage.getItem('deviceId');
+
+        // Generate unique deviceId if not already stored
+        if (!deviceId) {
+          deviceId = crypto.randomUUID();
+          localStorage.setItem('deviceId', deviceId);
+        }
+
+        const payload = {
+          deviceId,
+          userAgent: navigator.userAgent
+        };
+
+        const response = await fetch('/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          alert('You have joined successfully!');
+        } else {
+          alert('Failed to join. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error joining:', error);
+        alert('Error while joining. Check console for details.');
       }
-      const userAgent = navigator.userAgent;
-      await fetch('/join', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ deviceId, userAgent })
-      });
-      alert('You have joined!');
-    });
+    }
+
+    document.getElementById('joinBtn').addEventListener('click', joinUser);
   </script>
 </body>
 </html>
