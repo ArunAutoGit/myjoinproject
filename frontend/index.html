@@ -35,6 +35,12 @@
   <button id="joinBtn">Join</button>
 
   <script>
+    // Detect environment and set API base URL
+    const API_BASE_URL = 
+      window.location.hostname === "localhost" 
+        ? "http://localhost:3000" 
+        : "https://your-backend-service.onrender.com"; // replace after deployment
+
     async function joinUser() {
       try {
         let deviceId = localStorage.getItem('deviceId');
@@ -50,7 +56,7 @@
           userAgent: navigator.userAgent
         };
 
-        const response = await fetch('/join', {
+        const response = await fetch(`${API_BASE_URL}/join`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
